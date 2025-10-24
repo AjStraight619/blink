@@ -13,14 +13,9 @@ pub fn main() !void {
     try capy.init();
     defer capy.deinit();
 
-    // Initialize window (sets up but doesn't show yet)
     var window = try Window.init(allocator);
 
-    // Actually display the window (and apply state)
     window.show();
-
-    // Later you can replace the content:
-    // try window.setContent(YourEditorWidget.create());
 
     capy.runEventLoop();
 }
