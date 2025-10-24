@@ -1,13 +1,26 @@
 const std = @import("std");
+const capy = @import("capy");
+const Window = @import("ui/window.zig");
+pub usingnamespace capy.cross_platform;
+
+const File = std.fs.File;
 
 pub fn main() !void {
-    std.debug.print("All your {s} are belong to us.\n", .{"codebase"});
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer _ = gpa.deinit();
+    const allocator = gpa.allocator();
 
-    const stdout_file = std.io.getStdOut().writer();
-    var bw = std.io.bufferedWriter(stdout_file);
-    const stdout = bw.writer();
+    try capy.init();
+    defer capy.deinit();
 
-    try stdout.print("Run `zig build test` to run the tests.\n", .{});
+    // Initialize window (sets up but doesn't show yet)
+    var window = try Window.init(allocator);
 
-    try bw.flush();
+    // Actually display the window (and apply state)
+    window.show();
+
+    // Later you can replace the content:
+    // try window.setContent(YourEditorWidget.create());
+
+    capy.runEventLoop();
 }
